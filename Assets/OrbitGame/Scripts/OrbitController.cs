@@ -50,15 +50,10 @@ public class OrbitController : MonoBehaviour
                 {
                     OrbitData orbit = orbits[nearestOrbitIndex];
                     
+                    // Упрощенный захват - просто попал в радиус орбиты
                     if (Mathf.Abs(distance - orbit.radius) <= orbit.captureThreshold)
                     {
-                        float speed = rb.velocity.magnitude;
-                        float expectedOrbitSpeed = orbit.orbitSpeed * orbit.radius * Mathf.Deg2Rad;
-                        
-                        if (Mathf.Abs(speed - expectedOrbitSpeed) < expectedOrbitSpeed * speedMatchThreshold)
-                        {
-                            CaptureObject(rb, nearestOrbitIndex);
-                        }
+                        CaptureObject(rb, nearestOrbitIndex);
                     }
                 }
             }
@@ -80,14 +75,9 @@ public class OrbitController : MonoBehaviour
                 continue;
             }
             
-            float distance = Vector3.Distance(rb.position, transform.position);
             OrbitData orbit = orbits[orbitIndex];
             
-            if (distance > orbit.radius + orbit.captureThreshold * 2f)
-            {
-                toRemove.Add(rb);
-                continue;
-            }
+            // Убираем проверку на выход из орбиты - объект остается навсегда
             
             if (!orbitAngles.ContainsKey(rb))
             {
@@ -97,29 +87,44 @@ public class OrbitController : MonoBehaviour
             
             orbitAngles[rb] += orbit.orbitSpeed * Time.fixedDeltaTime;
             
+            // Принудительно устанавливаем орбитальную скорость
             float angleRad = orbitAngles[rb] * Mathf.Deg2Rad;
             Vector3 targetPosition = transform.position + new Vector3(
                 Mathf.Cos(angleRad) * orbit.radius,
-                rb.position.y,
+                transform.position.y, // Фиксируем Y на уровне планеты
                 Mathf.Sin(angleRad) * orbit.radius
             );
             
-            Vector3 direction2 = (targetPosition - rb.position).normalized;
-            rb.velocity = Vector3.Lerp(rb.velocity, direction2 * orbit.orbitSpeed * 0.1f * orbit.radius, Time.fixedDeltaTime * orbitSmoothness);
+            // Вычисляем тангенциальную скорость для орбиты
+            Vector3 tangentDirection = new Vector3(
+                -Mathf.Sin(angleRad),
+                0,
+                Mathf.Cos(angleRad)
+            );
             
-            float currentDistance = Vector3.Distance(new Vector3(rb.position.x, transform.position.y, rb.position.z), transform.position);
-            if (Mathf.Abs(currentDistance - orbit.radius) > 0.5f)
+            // Полностью заменяем скорость на орбитальную (убираем движение вверх)
+            rb.velocity = tangentDirection * (orbit.orbitSpeed * orbit.radius * Mathf.Deg2Rad);
+            
+            // Принудительно удерживаем на орбитальном радиусе и высоте
+            Vector3 currentPos = rb.position;
+            Vector3 orbitCenter = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+            Vector3 directionToCenter = (orbitCenter - new Vector3(currentPos.x, orbitCenter.y, currentPos.z)).normalized;
+            
+            float currentDistance = Vector3.Distance(new Vector3(currentPos.x, orbitCenter.y, currentPos.z), orbitCenter);
+            
+            // Корректируем позицию если нужно
+            if (Mathf.Abs(currentDistance - orbit.radius) > 0.1f || Mathf.Abs(currentPos.y - orbitCenter.y) > 0.1f)
             {
-                Vector3 pullDirection = (transform.position - rb.position).normalized;
-                pullDirection.y = 0;
-                float pullForce = (currentDistance - orbit.radius) * captureForce;
-                rb.AddForce(pullDirection * pullForce, ForceMode.Acceleration);
+                Vector3 correctPosition = orbitCenter + directionToCenter * -orbit.radius;
+                correctPosition.y = orbitCenter.y;
+                rb.MovePosition(Vector3.Lerp(currentPos, correctPosition, Time.fixedDeltaTime * 10f));
             }
         }
         
         foreach (var rb in toRemove)
         {
-            ReleaseObject(rb);
+            capturedObjects.Remove(rb);
+            orbitAngles.Remove(rb);
         }
     }
     
@@ -131,6 +136,9 @@ public class OrbitController : MonoBehaviour
             
             Vector3 direction = rb.position - transform.position;
             orbitAngles[rb] = Mathf.Atan2(direction.z, direction.x) * Mathf.Rad2Deg;
+            
+            // Отключаем гравитацию для захваченного объекта
+            rb.useGravity = false;
         }
     }
     
@@ -162,6 +170,11 @@ public class OrbitController : MonoBehaviour
         }
         
         return nearestIndex;
+    }
+    
+    public bool IsObjectCaptured(Rigidbody rb)
+    {
+        return capturedObjects.ContainsKey(rb);
     }
     
     float GetMaxOrbitRadius()

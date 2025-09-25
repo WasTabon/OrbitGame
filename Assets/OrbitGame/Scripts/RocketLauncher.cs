@@ -3,15 +3,33 @@ using UnityEngine;
 public class RocketLauncher : MonoBehaviour
 {
     [Header("Rocket Settings")]
-    public GameObject rocketPrefab;
     public float launchSpeed = 10f;
     
     [Header("Input")]
     public KeyCode launchKey = KeyCode.Space;
     
+    private Rigidbody rb;
+    private bool isLaunched = false;
+    
+    void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.isKinematic = true;
+        }
+        
+        // Отключаем SpaceObject до запуска
+        SpaceObject spaceObj = GetComponent<SpaceObject>();
+        if (spaceObj != null)
+        {
+            spaceObj.enabled = false;
+        }
+    }
+    
     void Update()
     {
-        if (Input.GetKeyDown(launchKey) || Input.GetMouseButtonDown(0))
+        if (!isLaunched && (Input.GetKeyDown(launchKey) || Input.GetMouseButtonDown(0)))
         {
             LaunchRocket();
         }
@@ -19,25 +37,33 @@ public class RocketLauncher : MonoBehaviour
     
     public void LaunchRocket()
     {
-        if (rocketPrefab == null)
-        {
-            Debug.LogError("Rocket prefab is not assigned!");
+        if (isLaunched || rb == null)
             return;
-        }
         
-        GameObject rocket = Instantiate(rocketPrefab, transform.position, Quaternion.identity);
+        // Активируем физику
+        rb.isKinematic = false;
+        rb.velocity = Vector3.up * launchSpeed;
         
-        Rigidbody rb = rocket.GetComponent<Rigidbody>();
-        if (rb != null)
+        // Активируем SpaceObject
+        SpaceObject spaceObj = GetComponent<SpaceObject>();
+        if (spaceObj != null)
         {
-            rb.velocity = transform.up * launchSpeed;
+            spaceObj.enabled = true;
         }
+        
+        isLaunched = true;
+        
+        // Отключаем этот компонент после запуска
+        this.enabled = false;
     }
     
     void OnDrawGizmos()
     {
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, 0.5f);
-        Gizmos.DrawRay(transform.position, transform.up * 2f);
+        if (!isLaunched)
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(transform.position, 0.5f);
+            Gizmos.DrawRay(transform.position, Vector3.up * 2f);
+        }
     }
 }

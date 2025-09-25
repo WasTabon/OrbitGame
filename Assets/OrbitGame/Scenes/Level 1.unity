@@ -468,6 +468,7 @@ GameObject:
   - component: {fileID: 1534075706365166847}
   - component: {fileID: 1534075706365166848}
   - component: {fileID: 1534075706365166849}
+  - component: {fileID: 1534075706365166850}
   m_Layer: 0
   m_Name: SM_Veh_Beacon_01
   m_TagString: Untagged
@@ -519,7 +520,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -531,6 +532,20 @@ MonoBehaviour:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1534075706365166846}
   m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bace7e4904e1906448dd66aac23f3e17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  launchSpeed: 10
+  launchKey: 32
+--- !u!114 &1534075706365166850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1534075706365166846}
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 94a40187c822abf4c9b309aa8cf5a904, type: 3}
   m_Name: 
@@ -640,10 +655,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   orbits:
-  - radius: 20
-    orbitSpeed: 5
+  - radius: 10
+    orbitSpeed: 50
     gizmoColor: {r: 1, g: 0, b: 0, a: 0}
-    captureThreshold: 0
+    captureThreshold: 43.8
   captureForce: 5
   orbitSmoothness: 2
   speedMatchThreshold: 0.3

@@ -25,6 +25,13 @@ public class SpaceGravity : MonoBehaviour
             
             if (rb != null && spaceObj != null)
             {
+                // Проверяем, не захвачен ли объект в орбиту
+                OrbitController orbitController = GetComponent<OrbitController>();
+                if (orbitController != null && orbitController.IsObjectCaptured(rb))
+                {
+                    continue; // Пропускаем объекты в орбите
+                }
+                
                 ApplyGravity(rb);
             }
         }

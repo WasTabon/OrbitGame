@@ -27,6 +27,13 @@ public class SpaceObject : MonoBehaviour
         {
             SetupTrail();
         }
+        
+        // Если есть RocketLauncher, то этот объект начинает неактивным
+        RocketLauncher launcher = GetComponent<RocketLauncher>();
+        if (launcher != null)
+        {
+            enabled = false;
+        }
     }
     
     void SetupRigidbody()
