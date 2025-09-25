@@ -3,6 +3,11 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class SpaceObject : MonoBehaviour
 {
+    [Header("Physics Settings")]
+    public float mass = 1f;
+    public float drag = 0f;
+    public float angularDrag = 0.05f;
+    
     [Header("Collision Settings")]
     public float bounciness = 0.8f;
     public float minCollisionForce = 0.1f;
@@ -10,39 +15,41 @@ public class SpaceObject : MonoBehaviour
     [Header("Visual")]
     public bool showVelocity = true;
     public Color velocityColor = Color.yellow;
+    public bool enableTrail = true;
     
     private Rigidbody rb;
     private TrailRenderer trail;
     
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
-        
-        // Ensure proper physics settings
-        rb.drag = 0f;
-        rb.angularDrag = 0.05f;
-        rb.useGravity = false;
-        
-        // Add trail for visual effect
-        trail = GetComponent<TrailRenderer>();
-        if (trail == null)
+        SetupRigidbody();
+        if (enableTrail)
         {
-            trail = gameObject.AddComponent<TrailRenderer>();
             SetupTrail();
         }
-        
-        // Add collider if missing
-        if (GetComponent<Collider>() == null)
-        {
-            SphereCollider col = gameObject.AddComponent<SphereCollider>();
-            col.radius = 0.5f;
-        }
+    }
+    
+    void SetupRigidbody()
+    {
+        rb = GetComponent<Rigidbody>();
+        rb.mass = mass;
+        rb.drag = drag;
+        rb.angularDrag = angularDrag;
+        rb.useGravity = false;
+        rb.interpolation = RigidbodyInterpolation.Interpolate;
+        rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
     }
     
     void SetupTrail()
     {
+        trail = GetComponent<TrailRenderer>();
+        if (trail == null)
+        {
+            trail = gameObject.AddComponent<TrailRenderer>();
+        }
+        
         trail.time = 2f;
-        trail.startWidth = 0.5f;
+        trail.startWidth = 0.3f;
         trail.endWidth = 0f;
         trail.material = new Material(Shader.Find("Sprites/Default"));
         
@@ -66,7 +73,6 @@ public class SpaceObject : MonoBehaviour
         
         if (otherSpace != null)
         {
-            // Realistic collision response
             Vector3 relativeVelocity = rb.velocity - otherSpace.rb.velocity;
             Vector3 collisionNormal = collision.contacts[0].normal;
             
@@ -79,18 +85,15 @@ public class SpaceObject : MonoBehaviour
             float mass2 = otherSpace.rb.mass;
             float totalMass = mass1 + mass2;
             
-            // Calculate impulse
             float impulse = 2 * velocityAlongNormal / totalMass;
             impulse *= bounciness;
             
-            // Apply forces
             if (Mathf.Abs(impulse) > minCollisionForce)
             {
                 Vector3 impulseVector = impulse * collisionNormal;
                 rb.velocity -= impulseVector * mass2;
                 otherSpace.rb.velocity += impulseVector * mass1;
                 
-                // Add some rotation for visual effect
                 rb.angularVelocity += Random.insideUnitSphere * impulse;
                 otherSpace.rb.angularVelocity += Random.insideUnitSphere * impulse;
             }

@@ -308,7 +308,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1372600141
+--- !u!1 &1238112112
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -316,50 +316,79 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1372600143}
-  - component: {fileID: 1372600142}
+  - component: {fileID: 1238112113}
   m_Layer: 0
-  m_Name: GameSetup
+  m_Name: Controllers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1372600142
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1372600141}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a7d20767be450f4f895f480d2892701, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  starPrefab: {fileID: 5064959288084643238}
-  rocketPrefab: {fileID: 1534075706365166846}
-  starPosition: {x: 0, y: 0, z: 0}
-  starGravityStrength: 100
-  numberOfOrbits: 3
-  minOrbitRadius: 10
-  maxOrbitRadius: 40
-  baseOrbitSpeed: 30
---- !u!4 &1372600143
+--- !u!4 &1238112113
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1372600141}
+  m_GameObject: {fileID: 1238112112}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.0351336, y: 5.9444494, z: 29.66694}
+  m_LocalPosition: {x: -5.751082, y: -9.490626, z: 23.163776}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1952096575}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1952096574
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1952096575}
+  - component: {fileID: 1952096576}
+  m_Layer: 0
+  m_Name: GravityController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1952096575
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1952096574}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 26.3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1238112113}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1952096576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1952096574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627203e284c12a44990c775f56c971c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gravityStrength: 100
+  minDistance: 2
+  maxDistance: 100
+  showGravityField: 1
+  gravityFieldColor: {r: 1, g: 1, b: 0, a: 0.2}
 --- !u!23 &1520489424331058984
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -419,7 +448,7 @@ Transform:
   m_GameObject: {fileID: 1534075706365166846}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.54, y: -16.94, z: 29.74}
+  m_LocalPosition: {x: 0, y: -10.12, z: 17.72}
   m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -438,6 +467,7 @@ GameObject:
   - component: {fileID: 1520489424331058984}
   - component: {fileID: 1534075706365166847}
   - component: {fileID: 1534075706365166848}
+  - component: {fileID: 1534075706365166849}
   m_Layer: 0
   m_Name: SM_Veh_Beacon_01
   m_TagString: Untagged
@@ -488,11 +518,31 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1534075706365166849
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1534075706365166846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94a40187c822abf4c9b309aa8cf5a904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mass: 1
+  drag: 0
+  angularDrag: 0.05
+  bounciness: 0.8
+  minCollisionForce: 0.1
+  showVelocity: 1
+  velocityColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  enableTrail: 1
 --- !u!23 &5052749444575023346
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -554,6 +604,7 @@ GameObject:
   - component: {fileID: 5070280058403964150}
   - component: {fileID: 5060726098214517606}
   - component: {fileID: 5052749444575023346}
+  - component: {fileID: 5070280058403964151}
   m_Layer: 0
   m_Name: SM_Env_Planet_04
   m_TagString: Untagged
@@ -576,6 +627,26 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5070280058403964151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5064959288084643238}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ed95d849c111c141bd98c0b500ef9e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  orbits:
+  - radius: 20
+    orbitSpeed: 5
+    gizmoColor: {r: 1, g: 0, b: 0, a: 0}
+    captureThreshold: 0
+  captureForce: 5
+  orbitSmoothness: 2
+  speedMatchThreshold: 0.3
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -584,4 +655,4 @@ SceneRoots:
   - {fileID: 705507995}
   - {fileID: 5070280058403964150}
   - {fileID: 1532188941227124042}
-  - {fileID: 1372600143}
+  - {fileID: 1238112113}
