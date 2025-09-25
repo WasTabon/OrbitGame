@@ -12,6 +12,9 @@ public class SpaceObject : MonoBehaviour
     public float bounciness = 0.8f;
     public float minCollisionForce = 0.1f;
     
+    [Header("Orbit Settings")]
+    public float orbitSpeedMultiplier = 1f;
+    
     [Header("Visual")]
     public bool showVelocity = true;
     public Color velocityColor = Color.yellow;
@@ -80,6 +83,19 @@ public class SpaceObject : MonoBehaviour
         
         if (otherSpace != null)
         {
+            // Проверяем есть ли RocketLauncher на одном из объектов
+            bool thisIsRocket = GetComponent<RocketLauncher>() != null;
+            bool otherIsRocket = otherSpace.GetComponent<RocketLauncher>() != null;
+            
+            if (thisIsRocket || otherIsRocket)
+            {
+                // Выбрасываем из орбиты
+                EjectFromOrbit(collision);
+                otherSpace.EjectFromOrbit(collision);
+                return;
+            }
+            
+            // Обычное столкновение
             Vector3 relativeVelocity = rb.velocity - otherSpace.rb.velocity;
             Vector3 collisionNormal = collision.contacts[0].normal;
             
@@ -105,6 +121,27 @@ public class SpaceObject : MonoBehaviour
                 otherSpace.rb.angularVelocity += Random.insideUnitSphere * impulse;
             }
         }
+    }
+    
+    void EjectFromOrbit(Collision collision)
+    {
+        // Найти орбит контроллер и освободить объект
+        OrbitController[] orbitControllers = FindObjectsOfType<OrbitController>();
+        foreach (var controller in orbitControllers)
+        {
+            controller.ReleaseObject(rb);
+        }
+        
+        // Добавить силу выброса
+        Vector3 ejectDirection = collision.contacts[0].normal;
+        if (GetComponent<RocketLauncher>() != null)
+        {
+            ejectDirection = -ejectDirection; // ракета отлетает в обратную сторону
+        }
+        
+        rb.useGravity = false; // на всякий случай
+        rb.velocity = ejectDirection * 25f + Random.insideUnitSphere * 8f; // Увеличил силу выброса
+        rb.angularVelocity = Random.insideUnitSphere * 15f;
     }
     
     void OnDrawGizmos()

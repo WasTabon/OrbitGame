@@ -22,11 +22,30 @@ public class OrbitController : MonoBehaviour
     
     private Dictionary<Rigidbody, int> capturedObjects = new Dictionary<Rigidbody, int>();
     private Dictionary<Rigidbody, float> orbitAngles = new Dictionary<Rigidbody, float>();
+    private Dictionary<Rigidbody, float> wasRecentlyReleased = new Dictionary<Rigidbody, float>();
     
     void FixedUpdate()
     {
         CheckForOrbitCapture();
         UpdateCapturedObjects();
+        CleanupReleasedObjects();
+    }
+    
+    void CleanupReleasedObjects()
+    {
+        List<Rigidbody> toRemove = new List<Rigidbody>();
+        foreach (var kvp in wasRecentlyReleased)
+        {
+            if (kvp.Key == null || Time.time - kvp.Value > 5f) // очищаем через 5 секунд
+            {
+                toRemove.Add(kvp.Key);
+            }
+        }
+        
+        foreach (var rb in toRemove)
+        {
+            wasRecentlyReleased.Remove(rb);
+        }
     }
     
     void CheckForOrbitCapture()
@@ -43,6 +62,12 @@ public class OrbitController : MonoBehaviour
             
             if (rb != null && spaceObj != null && !capturedObjects.ContainsKey(rb))
             {
+                // Проверяем, не был ли объект недавно освобожден
+                if (wasRecentlyReleased.ContainsKey(rb) && Time.time - wasRecentlyReleased[rb] < 2f)
+                {
+                    continue; // Не захватываем объект который недавно освободили
+                }
+                
                 float distance = Vector3.Distance(rb.position, transform.position);
                 int nearestOrbitIndex = GetNearestOrbitIndex(distance);
                 
@@ -85,7 +110,11 @@ public class OrbitController : MonoBehaviour
                 orbitAngles[rb] = Mathf.Atan2(direction.z, direction.x) * Mathf.Rad2Deg;
             }
             
-            orbitAngles[rb] += orbit.orbitSpeed * Time.fixedDeltaTime;
+            // Получаем индивидуальный множитель скорости объекта
+            SpaceObject spaceObj = rb.GetComponent<SpaceObject>();
+            float speedMultiplier = spaceObj != null ? spaceObj.orbitSpeedMultiplier : 1f;
+            
+            orbitAngles[rb] += orbit.orbitSpeed * speedMultiplier * Time.fixedDeltaTime;
             
             // Принудительно устанавливаем орбитальную скорость
             float angleRad = orbitAngles[rb] * Mathf.Deg2Rad;
@@ -102,8 +131,9 @@ public class OrbitController : MonoBehaviour
                 Mathf.Cos(angleRad)
             );
             
-            // Полностью заменяем скорость на орбитальную (убираем движение вверх)
-            rb.velocity = tangentDirection * (orbit.orbitSpeed * orbit.radius * Mathf.Deg2Rad);
+            // Применяем индивидуальный множитель скорости
+            float finalSpeed = orbit.orbitSpeed * orbit.radius * Mathf.Deg2Rad * speedMultiplier;
+            rb.velocity = tangentDirection * finalSpeed;
             
             // Принудительно удерживаем на орбитальном радиусе и высоте
             Vector3 currentPos = rb.position;
@@ -148,6 +178,12 @@ public class OrbitController : MonoBehaviour
         {
             capturedObjects.Remove(rb);
             orbitAngles.Remove(rb);
+            
+            // Запоминаем время освобождения
+            wasRecentlyReleased[rb] = Time.time;
+            
+            // Важно: включаем обратно гравитацию после освобождения
+            rb.useGravity = false; // Оставляем false для космических объектов
         }
     }
     
