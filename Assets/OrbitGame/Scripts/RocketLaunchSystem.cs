@@ -250,16 +250,24 @@ public class RocketLaunchSystem : MonoBehaviour
     void Victory()
     {
         if (gameEnded) return;
-        
         gameEnded = true;
+    
+        GameResultUI resultUI = FindObjectOfType<GameResultUI>();
+        if (resultUI != null)
+            resultUI.OnGameVictory();
+    
         Debug.Log($"ПОБЕДА! Все {requiredRocketsCount} ракеты успешно продержались на орбите {requiredOrbitTime} секунд!");
     }
-    
+
     void Defeat(string reason)
     {
         if (gameEnded) return;
-        
         gameEnded = true;
+    
+        GameResultUI resultUI = FindObjectOfType<GameResultUI>();
+        if (resultUI != null)
+            resultUI.OnGameDefeat();
+    
         Debug.Log("ПОРАЖЕНИЕ! " + reason);
     }
     
