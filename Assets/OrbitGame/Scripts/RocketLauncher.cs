@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class RocketLauncher : MonoBehaviour
 {
@@ -29,10 +30,51 @@ public class RocketLauncher : MonoBehaviour
     
     void Update()
     {
-        if (!isLaunched && (Input.GetKeyDown(launchKey) || Input.GetMouseButtonDown(0)))
+        if (!isLaunched && CheckLaunchInput())
         {
             LaunchRocket();
         }
+    }
+    
+    bool CheckLaunchInput()
+    {
+        // Проверка клавиатуры
+        if (Input.GetKeyDown(launchKey))
+        {
+            return true;
+        }
+        
+        // Проверка мыши для PC
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (IsPointerOverUI())
+                return false;
+            return true;
+        }
+        
+        // Проверка тачей для мобильных устройств
+        if (Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+            if (touch.phase == TouchPhase.Began)
+            {
+                if (IsPointerOverUI(touch.fingerId))
+                    return false;
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    bool IsPointerOverUI()
+    {
+        return EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
+    }
+    
+    bool IsPointerOverUI(int fingerId)
+    {
+        return EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(fingerId);
     }
     
     public void LaunchRocket()
