@@ -10,14 +10,13 @@ public class UIController : MonoBehaviour
     public TextMeshProUGUI blinkingText;
     public float blinkDuration = 1f;
     
-    RocketLauncher launcher;
-    
+    private RocketLaunchSystem rocketSystem;
     private Tween blinkTween;
-    private bool isRocketLaunched = false;
+    private bool allRocketsLaunched = false;
     
     void Start()
     {
-        launcher = FindObjectOfType<RocketLauncher>();
+        rocketSystem = FindObjectOfType<RocketLaunchSystem>();
         
         if (blinkingText == null)
         {
@@ -26,15 +25,26 @@ public class UIController : MonoBehaviour
         
         if (blinkingText != null)
         {
+            UpdateText();
             StartBlinking();
         }
     }
     
     void Update()
     {
-        if (!isRocketLaunched)
+        if (!allRocketsLaunched && rocketSystem != null)
         {
-            CheckRocketLaunched();
+            UpdateText();
+            CheckAllRocketsLaunched();
+        }
+    }
+    
+    void UpdateText()
+    {
+        if (rocketSystem != null && blinkingText != null)
+        {
+            int remainingRockets = rocketSystem.requiredRocketsCount - rocketSystem.GetLaunchedRocketsCount();
+            blinkingText.text = $"TAP TO LAUNCH THE ROCKET ({remainingRockets})";
         }
     }
     
@@ -45,12 +55,12 @@ public class UIController : MonoBehaviour
             .SetEase(Ease.InOutSine);
     }
     
-    void CheckRocketLaunched()
+    void CheckAllRocketsLaunched()
     {
-        if (!launcher.enabled)
+        if (rocketSystem.GetLaunchedRocketsCount() >= rocketSystem.requiredRocketsCount)
         {
             StopBlinking();
-            isRocketLaunched = true;
+            allRocketsLaunched = true;
         }
     }
     
