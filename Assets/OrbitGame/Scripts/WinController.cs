@@ -21,7 +21,6 @@ public class WinController : MonoBehaviour
     
     void Start()
     {
-        // Находим первую ракету на сцене
         RocketLauncher firstRocket = FindObjectOfType<RocketLauncher>();
         if (firstRocket != null)
         {
@@ -46,7 +45,6 @@ public class WinController : MonoBehaviour
     
     void CheckForNextRocketSpawn()
     {
-        // Проверяем нужно ли создать новую ракету
         if (currentActiveRocket == null && launchedRockets.Count < requiredRocketsCount)
         {
             SpawnNewRocket();
@@ -59,7 +57,6 @@ public class WinController : MonoBehaviour
         {
             GameObject newRocket = Instantiate(rocketPrefab, spawnPoint.position, spawnPoint.rotation);
             
-            // Сбрасываем состояние ракеты
             RocketLauncher launcher = newRocket.GetComponent<RocketLauncher>();
             if (launcher != null)
             {
@@ -101,7 +98,6 @@ public class WinController : MonoBehaviour
             rocketExitedOrbit[rocket] = false;
             Debug.Log($"WinController: Ракета {launchedRockets.Count} запущена!");
             
-            // Убираем ссылку на активную ракету, чтобы в Update создалась новая
             if (currentActiveRocket == rocket)
             {
                 currentActiveRocket = null;
@@ -150,17 +146,14 @@ public class WinController : MonoBehaviour
         
         bool wasInOrbit = rocketOrbitStatus.ContainsKey(rocket) && rocketOrbitStatus[rocket];
         
-        // Обрабатываем изменение статуса орбиты
         if (currentlyInOrbit && !wasInOrbit)
         {
-            // Ракета только что попала на орбиту
             rocketOrbitStatus[rocket] = true;
             rocketOrbitStartTime[rocket] = Time.time;
             Debug.Log($"WinController: Ракета попала на орбиту! ({GetRocketsInOrbitCount()}/{requiredRocketsCount})");
         }
         else if (!currentlyInOrbit && wasInOrbit)
         {
-            // Ракета покинула орбиту
             rocketOrbitStatus[rocket] = false;
             rocketExitedOrbit[rocket] = true;
             rocketExitTime[rocket] = Time.time;
@@ -183,7 +176,6 @@ public class WinController : MonoBehaviour
         if (launchedRockets.Count < requiredRocketsCount)
             return;
         
-        // Проверяем что все ракеты на орбите и продержались нужное время
         bool allRocketsWin = true;
         
         foreach (var rocket in launchedRockets)
@@ -247,6 +239,11 @@ public class WinController : MonoBehaviour
         
         gameEnded = true;
         Debug.Log($"ПОБЕДА! Все {requiredRocketsCount} ракеты успешно продержались на орбите {requiredOrbitTime} секунд!");
+        
+        if (LevelManager.Instance != null)
+        {
+            LevelManager.Instance.OnLevelCompleted();
+        }
     }
     
     void Defeat(string reason)

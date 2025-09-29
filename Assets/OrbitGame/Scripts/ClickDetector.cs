@@ -23,6 +23,8 @@ public class ClickDetector : MonoBehaviour
     private Camera mainCamera;
     private Vector3 initialCameraPosition;
     private Quaternion initialCameraRotation;
+    private bool isZoomedIn = false;
+    private GameObject currentFocusedContainer;
 
     private void Start()
     {
@@ -64,6 +66,19 @@ public class ClickDetector : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit))
         {
+            if (isZoomedIn && currentFocusedContainer != null)
+            {
+                PlanetLevel planetLevel = hit.collider.GetComponent<PlanetLevel>();
+                if (planetLevel == null)
+                    planetLevel = hit.collider.GetComponentInParent<PlanetLevel>();
+                
+                if (planetLevel != null)
+                {
+                    planetLevel.LoadLevel();
+                    return;
+                }
+            }
+
             foreach (var container in parentContainers)
             {
                 if (container != null && hit.collider.transform.IsChildOf(container.transform))
@@ -108,6 +123,11 @@ public class ClickDetector : MonoBehaviour
         ObjectOrbiter orbiter = container.GetComponent<ObjectOrbiter>();
         if (orbiter == null) return;
 
+        currentFocusedContainer = container;
+        isZoomedIn = true;
+        
+        orbiter.DisableOrbitCollider();
+
         float orbitRadiusValue = GetOrbitRadius(orbiter);
         
         float maxObjectSize = 0f;
@@ -141,6 +161,7 @@ public class ClickDetector : MonoBehaviour
 
         targetCamera.transform.DOMove(targetPosition, cameraMoveSpeed).SetEase(Ease.InOutQuad)
             .OnComplete(() => {
+                canDetectClicks = true;
                 if (uiManager != null)
                 {
                     uiManager.ShowBackButton();
@@ -197,6 +218,18 @@ public class ClickDetector : MonoBehaviour
 
     public void ResetCamera()
     {
+        if (currentFocusedContainer != null)
+        {
+            ObjectOrbiter orbiter = currentFocusedContainer.GetComponent<ObjectOrbiter>();
+            if (orbiter != null)
+            {
+                orbiter.EnableOrbitCollider();
+            }
+        }
+
+        isZoomedIn = false;
+        currentFocusedContainer = null;
+
         targetCamera.transform.DOMove(initialCameraPosition, cameraMoveSpeed).SetEase(Ease.InOutQuad);
         targetCamera.transform.DORotateQuaternion(initialCameraRotation, cameraMoveSpeed).SetEase(Ease.InOutQuad)
             .OnComplete(() => {

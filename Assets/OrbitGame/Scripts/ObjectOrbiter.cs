@@ -15,6 +15,7 @@ public class ObjectOrbiter : MonoBehaviour
 
     private List<float> initialAngles = new List<float>();
     private GameObject orbitTrigger;
+    private SphereCollider orbitCollider;
 
     private void Start()
     {
@@ -34,9 +35,9 @@ public class ObjectOrbiter : MonoBehaviour
         orbitTrigger.transform.SetParent(transform);
         orbitTrigger.transform.localPosition = Vector3.zero;
 
-        SphereCollider sphereCollider = orbitTrigger.AddComponent<SphereCollider>();
-        sphereCollider.radius = radius;
-        sphereCollider.isTrigger = true;
+        orbitCollider = orbitTrigger.AddComponent<SphereCollider>();
+        orbitCollider.radius = radius;
+        orbitCollider.isTrigger = true;
     }
 
     private void Update()
@@ -57,6 +58,22 @@ public class ObjectOrbiter : MonoBehaviour
             );
 
             orbitingObjects[i].transform.position = centerObject.position + offset;
+        }
+    }
+
+    public void DisableOrbitCollider()
+    {
+        if (orbitCollider != null)
+        {
+            orbitCollider.enabled = false;
+        }
+    }
+
+    public void EnableOrbitCollider()
+    {
+        if (orbitCollider != null)
+        {
+            orbitCollider.enabled = true;
         }
     }
 }
