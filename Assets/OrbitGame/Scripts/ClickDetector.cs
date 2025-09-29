@@ -14,6 +14,7 @@ public class ClickDetector : MonoBehaviour
     [SerializeField] private Camera targetCamera;
     [SerializeField] private float cameraMoveSpeed = 1f;
     [SerializeField] private float paddingMultiplier = 1.5f;
+    [SerializeField] private float cameraRotationSpeed = 0.5f;
 
     [Header("UI")]
     [SerializeField] private CameraUIManager uiManager;
@@ -36,6 +37,8 @@ public class ClickDetector : MonoBehaviour
         if (uiManager != null)
         {
             uiManager.SetBackButtonCallback(OnBackButtonClick);
+            uiManager.SetMoveLeftCallback(OnMoveLeftClick);
+            uiManager.SetMoveRightCallback(OnMoveRightClick);
         }
     }
 
@@ -166,6 +169,20 @@ public class ClickDetector : MonoBehaviour
         float distance = (size * 0.5f) / Mathf.Tan(verticalFOV * 0.5f * Mathf.Deg2Rad);
         
         return distance;
+    }
+
+    private void OnMoveLeftClick()
+    {
+        Vector3 currentRotation = targetCamera.transform.eulerAngles;
+        targetCamera.transform.DORotate(new Vector3(currentRotation.x, currentRotation.y - 90f, currentRotation.z), 
+            cameraRotationSpeed).SetEase(Ease.InOutQuad);
+    }
+
+    private void OnMoveRightClick()
+    {
+        Vector3 currentRotation = targetCamera.transform.eulerAngles;
+        targetCamera.transform.DORotate(new Vector3(currentRotation.x, currentRotation.y + 90f, currentRotation.z), 
+            cameraRotationSpeed).SetEase(Ease.InOutQuad);
     }
 
     private void OnBackButtonClick()
