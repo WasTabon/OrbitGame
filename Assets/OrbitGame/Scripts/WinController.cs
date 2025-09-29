@@ -244,6 +244,10 @@ public class WinController : MonoBehaviour
         {
             LevelManager.Instance.OnLevelCompleted();
         }
+        else
+        {
+            Debug.Log("Level manager is null");
+        }
     }
     
     void Defeat(string reason)

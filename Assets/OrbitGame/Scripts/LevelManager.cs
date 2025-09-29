@@ -1,31 +1,38 @@
-    using UnityEngine;
+using UnityEngine;
 
-    public class LevelManager : MonoBehaviour
+public class LevelManager : MonoBehaviour
+{
+    public static LevelManager Instance { get; private set; }
+    
+    private int currentLevelIndex;
+    
+    void Awake()
     {
-        public static LevelManager Instance { get; private set; }
-        
-        private PlanetLevel currentPlanet;
-        
-        void Awake()
+        if (Instance != null && Instance != this)
         {
-            Instance = this;
+            Destroy(gameObject);
+            return;
         }
         
-        public void SetCurrentPlanet(PlanetLevel planet)
-        {
-            currentPlanet = planet;
-        }
-        
-        public void OnLevelCompleted()
-        {
-            if (currentPlanet != null)
-            {
-                currentPlanet.MarkAsCompleted();
-            }
-        }
-        
-        public void ReturnToLevelSelection()
-        {
-            UnityEngine.SceneManagement.SceneManager.LoadScene("Levels");
-        }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
+    
+    public void SetCurrentLevelIndex(int index)
+    {
+        currentLevelIndex = index;
+        Debug.Log($"LevelManager: Установлен levelIndex = {index}");
+    }
+    
+    public void OnLevelCompleted()
+    {
+        PlayerPrefs.SetInt($"LevelWin_{currentLevelIndex}", 1);
+        PlayerPrefs.Save();
+        Debug.Log($"LevelManager: Level {currentLevelIndex} marked as completed!");
+    }
+    
+    public void ReturnToLevelSelection()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Levels");
+    }
+}

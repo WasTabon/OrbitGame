@@ -257,6 +257,8 @@ public class RocketLaunchSystem : MonoBehaviour
             resultUI.OnGameVictory();
     
         Debug.Log($"ПОБЕДА! Все {requiredRocketsCount} ракеты успешно продержались на орбите {requiredOrbitTime} секунд!");
+        
+        LevelManager.Instance.OnLevelCompleted();
     }
 
     void Defeat(string reason)

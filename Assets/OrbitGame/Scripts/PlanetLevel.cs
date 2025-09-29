@@ -4,6 +4,8 @@ public class PlanetLevel : MonoBehaviour
 {
     [Header("Level Settings")]
     public int levelIndex = 1;
+
+    private bool _isCompleted;
     
     private GameObject beaconObject;
     
@@ -14,14 +16,20 @@ public class PlanetLevel : MonoBehaviour
         if (beaconObject != null)
         {
             bool isCompleted = PlayerPrefs.GetInt($"LevelWin_{levelIndex}", 0) == 1;
+            _isCompleted = isCompleted;
             beaconObject.SetActive(isCompleted);
         }
     }
     
     public void LoadLevel()
     {
+        if (_isCompleted) return;
+        
         string levelName = GetLevelNameToLoad();
-        LevelManager.Instance.SetCurrentPlanet(this);
+        if (LevelManager.Instance != null)
+        {
+            LevelManager.Instance.SetCurrentLevelIndex(levelIndex);
+        }
         UnityEngine.SceneManagement.SceneManager.LoadScene(levelName);
     }
     
