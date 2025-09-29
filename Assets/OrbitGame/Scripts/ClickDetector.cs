@@ -25,6 +25,7 @@ public class ClickDetector : MonoBehaviour
     private Quaternion initialCameraRotation;
     private bool isZoomedIn = false;
     private GameObject currentFocusedContainer;
+    private int currentRotationStep = 0;
 
     private void Start()
     {
@@ -194,15 +195,17 @@ public class ClickDetector : MonoBehaviour
 
     private void OnMoveLeftClick()
     {
-        Vector3 currentRotation = targetCamera.transform.eulerAngles;
-        targetCamera.transform.DORotate(new Vector3(currentRotation.x, currentRotation.y - 90f, currentRotation.z), 
+        currentRotationStep--;
+        float targetYRotation = currentRotationStep * 90f;
+        targetCamera.transform.DORotate(new Vector3(0f, targetYRotation, 0f), 
             cameraRotationSpeed).SetEase(Ease.InOutQuad);
     }
 
     private void OnMoveRightClick()
     {
-        Vector3 currentRotation = targetCamera.transform.eulerAngles;
-        targetCamera.transform.DORotate(new Vector3(currentRotation.x, currentRotation.y + 90f, currentRotation.z), 
+        currentRotationStep++;
+        float targetYRotation = currentRotationStep * 90f;
+        targetCamera.transform.DORotate(new Vector3(0f, targetYRotation, 0f), 
             cameraRotationSpeed).SetEase(Ease.InOutQuad);
     }
 
