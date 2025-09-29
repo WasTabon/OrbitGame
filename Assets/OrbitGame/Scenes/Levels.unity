@@ -265,7 +265,7 @@ MonoBehaviour:
   orbitRadius: 75
   targetCamera: {fileID: 407702799}
   cameraMoveSpeed: 1
-  paddingMultiplier: 1.2
+  paddingMultiplier: 2
 --- !u!1 &407702797
 GameObject:
   m_ObjectHideFlags: 0
