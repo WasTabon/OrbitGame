@@ -263,6 +263,9 @@ MonoBehaviour:
   parentContainers:
   - {fileID: 497984850}
   orbitRadius: 75
+  targetCamera: {fileID: 407702799}
+  cameraMoveSpeed: 1
+  paddingMultiplier: 1.2
 --- !u!1 &407702797
 GameObject:
   m_ObjectHideFlags: 0
@@ -322,7 +325,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 10000
-  field of view: 60
+  field of view: 90
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -388,8 +391,8 @@ MonoBehaviour:
   orbitingObjects:
   - {fileID: 4921524483607400370}
   - {fileID: 1778738515}
-  radius: 75
-  rotationSpeed: 30
+  radius: 85
+  rotationSpeed: 5
 --- !u!4 &497984852
 Transform:
   m_ObjectHideFlags: 0
@@ -399,7 +402,7 @@ Transform:
   m_GameObject: {fileID: 497984850}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -298, y: 866, z: 1326}
+  m_LocalPosition: {x: -275.3, y: 685.4, z: 500}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -452,6 +455,7 @@ GameObject:
   - component: {fileID: 1778738518}
   - component: {fileID: 1778738517}
   - component: {fileID: 1778738516}
+  - component: {fileID: 1778738520}
   m_Layer: 0
   m_Name: SM_Env_Planet_02 (1)
   m_TagString: Untagged
@@ -540,11 +544,25 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 20.7, y: 59.9, z: 0}
-  m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
+  m_LocalScale: {x: 0.08, y: 0.08, z: 0.08}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 497984852}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1778738520
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1778738515}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6aef5d6c74b7a964eb6a865eb6dd3fb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationAxis: {x: 0, y: 1, z: 0}
+  rotationSpeed: 10
 --- !u!1 &1296529624415470
 GameObject:
   m_ObjectHideFlags: 0
@@ -557,6 +575,7 @@ GameObject:
   - component: {fileID: 33950787480974610}
   - component: {fileID: 23147763952189728}
   - component: {fileID: 33950787480974611}
+  - component: {fileID: 33950787480974612}
   m_Layer: 0
   m_Name: Sun
   m_TagString: Untagged
@@ -574,7 +593,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
+  m_LocalScale: {x: 0.15, y: 0.15, z: 0.15}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 497984852}
@@ -650,6 +669,20 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 228.7417
   m_Center: {x: -0.00005340576, y: 0, z: -0.000022888184}
+--- !u!114 &33950787480974612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1296529624415470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6aef5d6c74b7a964eb6a865eb6dd3fb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationAxis: {x: 0, y: 1, z: 0}
+  rotationSpeed: 5
 --- !u!23 &4906780250104133330
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -712,6 +745,7 @@ GameObject:
   - component: {fileID: 4917672439067684430}
   - component: {fileID: 4906780250104133330}
   - component: {fileID: 4925485859807021255}
+  - component: {fileID: 4925485859807021256}
   m_Layer: 0
   m_Name: SM_Env_Planet_02
   m_TagString: Untagged
@@ -729,7 +763,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 88.7, y: 0, z: 0}
-  m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
+  m_LocalScale: {x: 0.08, y: 0.08, z: 0.08}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 497984852}
@@ -755,6 +789,20 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 231.23535
   m_Center: {x: 0.0000076293945, y: 0.000045776374, z: -2.2737368e-13}
+--- !u!114 &4925485859807021256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4921524483607400370}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6aef5d6c74b7a964eb6a865eb6dd3fb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationAxis: {x: 0, y: 1, z: 0}
+  rotationSpeed: 10
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

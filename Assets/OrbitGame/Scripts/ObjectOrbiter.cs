@@ -14,15 +14,29 @@ public class ObjectOrbiter : MonoBehaviour
     [SerializeField] private float rotationSpeed = 30f;
 
     private List<float> initialAngles = new List<float>();
+    private GameObject orbitTrigger;
 
     private void Start()
     {
+        CreateOrbitTrigger();
+
         float angleStep = 360f / orbitingObjects.Count;
         
         for (int i = 0; i < orbitingObjects.Count; i++)
         {
             initialAngles.Add(angleStep * i);
         }
+    }
+
+    private void CreateOrbitTrigger()
+    {
+        orbitTrigger = new GameObject("OrbitTrigger");
+        orbitTrigger.transform.SetParent(transform);
+        orbitTrigger.transform.localPosition = Vector3.zero;
+
+        SphereCollider sphereCollider = orbitTrigger.AddComponent<SphereCollider>();
+        sphereCollider.radius = radius;
+        sphereCollider.isTrigger = true;
     }
 
     private void Update()
