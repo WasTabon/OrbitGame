@@ -15,6 +15,9 @@ public class ClickDetector : MonoBehaviour
     [SerializeField] private float cameraMoveSpeed = 1f;
     [SerializeField] private float paddingMultiplier = 1.5f;
 
+    [Header("UI")]
+    [SerializeField] private CameraUIManager uiManager;
+
     private bool canDetectClicks = true;
     private Camera mainCamera;
     private Vector3 initialCameraPosition;
@@ -29,6 +32,11 @@ public class ClickDetector : MonoBehaviour
 
         initialCameraPosition = targetCamera.transform.position;
         initialCameraRotation = targetCamera.transform.rotation;
+
+        if (uiManager != null)
+        {
+            uiManager.SetBackButtonCallback(OnBackButtonClick);
+        }
     }
 
     private void Update()
@@ -123,7 +131,18 @@ public class ClickDetector : MonoBehaviour
             container.transform.position.z - requiredDistance
         );
 
-        targetCamera.transform.DOMove(targetPosition, cameraMoveSpeed).SetEase(Ease.InOutQuad);
+        if (uiManager != null)
+        {
+            uiManager.HideNavigationButtons();
+        }
+
+        targetCamera.transform.DOMove(targetPosition, cameraMoveSpeed).SetEase(Ease.InOutQuad)
+            .OnComplete(() => {
+                if (uiManager != null)
+                {
+                    uiManager.ShowBackButton();
+                }
+            });
         targetCamera.transform.DORotateQuaternion(Quaternion.identity, cameraMoveSpeed).SetEase(Ease.InOutQuad);
     }
 
@@ -149,11 +168,27 @@ public class ClickDetector : MonoBehaviour
         return distance;
     }
 
+    private void OnBackButtonClick()
+    {
+        if (uiManager != null)
+        {
+            uiManager.HideBackButton();
+        }
+        
+        ResetCamera();
+    }
+
     public void ResetCamera()
     {
         targetCamera.transform.DOMove(initialCameraPosition, cameraMoveSpeed).SetEase(Ease.InOutQuad);
         targetCamera.transform.DORotateQuaternion(initialCameraRotation, cameraMoveSpeed).SetEase(Ease.InOutQuad)
-            .OnComplete(() => canDetectClicks = true);
+            .OnComplete(() => {
+                canDetectClicks = true;
+                if (uiManager != null)
+                {
+                    uiManager.ShowNavigationButtons();
+                }
+            });
     }
 
     public void EnableClickDetection()
