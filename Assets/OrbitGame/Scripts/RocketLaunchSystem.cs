@@ -16,6 +16,14 @@ public class RocketLaunchSystem : MonoBehaviour
     [Header("Input")]
     public KeyCode launchKey = KeyCode.Space;
     
+    [Header("Trajectory Gizmos")]
+    public bool showTrajectory = true;
+    public int trajectorySteps = 100;
+    public float trajectoryTimeStep = 0.1f;
+    public Color trajectoryColor = Color.yellow;
+    public Color orbitZoneColor = Color.green;
+    public float gizmoSphereSize = 0.3f;
+    
     private List<GameObject> launchedRockets = new List<GameObject>();
     private Dictionary<GameObject, bool> rocketOrbitStatus = new Dictionary<GameObject, bool>();
     private Dictionary<GameObject, float> rocketOrbitStartTime = new Dictionary<GameObject, float>();
@@ -40,13 +48,11 @@ public class RocketLaunchSystem : MonoBehaviour
     
     bool CheckLaunchInput()
     {
-        // Проверка клавиатуры
         if (Input.GetKeyDown(launchKey))
         {
             return true;
         }
         
-        // Проверка мыши для PC
         if (Input.GetMouseButtonDown(0))
         {
             if (IsPointerOverUI())
@@ -54,7 +60,6 @@ public class RocketLaunchSystem : MonoBehaviour
             return true;
         }
         
-        // Проверка тачей для мобильных устройств
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
@@ -87,10 +92,8 @@ public class RocketLaunchSystem : MonoBehaviour
             return;
         }
         
-        // Создаем ракету
         GameObject newRocket = Instantiate(rocketPrefab, spawnPoint.position, spawnPoint.rotation);
         
-        // Сразу запускаем её
         Rigidbody rb = newRocket.GetComponent<Rigidbody>();
         if (rb != null)
         {
@@ -98,21 +101,18 @@ public class RocketLaunchSystem : MonoBehaviour
             rb.velocity = Vector3.up * launchSpeed;
         }
         
-        // Активируем SpaceObject если есть
         SpaceObject spaceObj = newRocket.GetComponent<SpaceObject>();
         if (spaceObj != null)
         {
             spaceObj.enabled = true;
         }
         
-        // Отключаем RocketLauncher если есть (он не нужен в этой системе)
         RocketLauncher launcher = newRocket.GetComponent<RocketLauncher>();
         if (launcher != null)
         {
             launcher.enabled = false;
         }
         
-        // Добавляем в список запущенных ракет
         launchedRockets.Add(newRocket);
         rocketOrbitStatus[newRocket] = false;
         rocketExitedOrbit[newRocket] = false;
@@ -156,17 +156,14 @@ public class RocketLaunchSystem : MonoBehaviour
         
         bool wasInOrbit = rocketOrbitStatus.ContainsKey(rocket) && rocketOrbitStatus[rocket];
         
-        // Обрабатываем изменение статуса орбиты
         if (currentlyInOrbit && !wasInOrbit)
         {
-            // Ракета только что попала на орбиту
             rocketOrbitStatus[rocket] = true;
             rocketOrbitStartTime[rocket] = Time.time;
             Debug.Log($"RocketLaunchSystem: Ракета попала на орбиту! ({GetRocketsInOrbitCount()}/{requiredRocketsCount})");
         }
         else if (!currentlyInOrbit && wasInOrbit)
         {
-            // Ракета покинула орбиту
             rocketOrbitStatus[rocket] = false;
             rocketExitedOrbit[rocket] = true;
             rocketExitTime[rocket] = Time.time;
@@ -189,7 +186,6 @@ public class RocketLaunchSystem : MonoBehaviour
         if (launchedRockets.Count < requiredRocketsCount)
             return;
         
-        // Проверяем что все ракеты на орбите и продержались нужное время
         bool allRocketsWin = true;
         
         foreach (var rocket in launchedRockets)
@@ -283,5 +279,93 @@ public class RocketLaunchSystem : MonoBehaviour
     public int GetLaunchedRocketsCount()
     {
         return launchedRockets.Count;
+    }
+    
+    void OnDrawGizmos()
+    {
+        if (!showTrajectory || spawnPoint == null)
+            return;
+        
+        SimulateTrajectory();
+    }
+    
+    void SimulateTrajectory()
+    {
+        Vector3 position = spawnPoint.position;
+        Vector3 velocity = Vector3.up * launchSpeed;
+        
+        OrbitController[] orbitControllers = FindObjectsOfType<OrbitController>();
+        
+        Vector3 previousPosition = position;
+        bool wasInOrbit = false;
+        
+        for (int i = 0; i < trajectorySteps; i++)
+        {
+            bool isInOrbit = false;
+            
+            foreach (var controller in orbitControllers)
+            {
+                if (controller.orbits.Count == 0) continue;
+                
+                float distanceToCenter = Vector3.Distance(position, controller.transform.position);
+                
+                foreach (var orbit in controller.orbits)
+                {
+                    if (Mathf.Abs(distanceToCenter - orbit.radius) <= orbit.captureThreshold)
+                    {
+                        Vector3 directionToRocket = (position - controller.transform.position).normalized;
+                        float dotProduct = Vector3.Dot(velocity.normalized, directionToRocket);
+                        bool isMovingTangentially = Mathf.Abs(dotProduct) < 0.5f;
+                        bool hasOrbitVelocity = velocity.magnitude > 1f;
+                        
+                        if (isMovingTangentially && hasOrbitVelocity)
+                        {
+                            isInOrbit = true;
+                            
+                            float angleRad = Mathf.Atan2(position.z - controller.transform.position.z, 
+                                                         position.x - controller.transform.position.x);
+                            
+                            Vector3 tangentDirection = new Vector3(
+                                -Mathf.Sin(angleRad),
+                                0,
+                                Mathf.Cos(angleRad)
+                            );
+                            
+                            velocity = tangentDirection * orbit.orbitSpeed * orbit.radius * Mathf.Deg2Rad;
+                            
+                            Vector3 orbitCenter = new Vector3(controller.transform.position.x, 
+                                                              controller.transform.position.y, 
+                                                              controller.transform.position.z);
+                            Vector3 directionToCenter = (orbitCenter - new Vector3(position.x, orbitCenter.y, position.z)).normalized;
+                            position = orbitCenter + directionToCenter * -orbit.radius;
+                            position.y = orbitCenter.y;
+                            
+                            break;
+                        }
+                    }
+                }
+                
+                if (isInOrbit) break;
+            }
+            
+            Color currentColor = isInOrbit ? orbitZoneColor : trajectoryColor;
+            
+            if (wasInOrbit != isInOrbit)
+            {
+                currentColor = Color.Lerp(currentColor, Color.white, 0.5f);
+            }
+            
+            Gizmos.color = currentColor;
+            Gizmos.DrawLine(previousPosition, position);
+            Gizmos.DrawSphere(position, gizmoSphereSize);
+            
+            previousPosition = position;
+            wasInOrbit = isInOrbit;
+            
+            position += velocity * trajectoryTimeStep;
+        }
+        
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(spawnPoint.position, 1f);
     }
 }
