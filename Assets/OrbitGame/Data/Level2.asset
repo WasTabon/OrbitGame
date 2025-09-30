@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a9c9a91a943407429959aa5cd53422d, type: 3}
   m_Name: Level2
   m_EditorClassIdentifier: 
-  modifierName: 
+  modifierName: Strong Gravity
   modifierIcon: {fileID: 0}
-  description: 
+  description: Gather atmospheric readings
