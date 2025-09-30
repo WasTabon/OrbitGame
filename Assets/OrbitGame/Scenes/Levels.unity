@@ -918,6 +918,48 @@ MonoBehaviour:
   - {fileID: 0}
   radius: 85
   rotationSpeed: 5
+  showOrbitLine: 1
+  orbitSegments: 64
+  orbitLineWidth: 5
+  orbitMaterial: {fileID: 0}
+  useGradient: 1
+  primaryColor: {r: 0.4, g: 0.85, b: 1, a: 0.7}
+  secondaryColor: {r: 0.6, g: 0.95, b: 1, a: 0.3}
+  animateColors: 1
+  colorAnimationSpeed: 1
+  enablePulsing: 0
+  pulseSpeed: 2
+  pulseIntensity: 0.3
+  pulseCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  enableGlow: 1
+  glowIntensity: 1.5
+  enableWave: 1
+  waveSpeed: 3
+  waveAmplitude: 1
+  waveFrequency: 3
 --- !u!4 &497984852
 Transform:
   m_ObjectHideFlags: 0
@@ -2889,6 +2931,48 @@ MonoBehaviour:
   - {fileID: 8667812610292097251}
   radius: 30
   rotationSpeed: 30
+  showOrbitLine: 0
+  orbitSegments: 64
+  orbitLineWidth: 0.1
+  orbitMaterial: {fileID: 0}
+  useGradient: 1
+  primaryColor: {r: 0.4, g: 0.85, b: 1, a: 0.7}
+  secondaryColor: {r: 0.6, g: 0.95, b: 1, a: 0.3}
+  animateColors: 1
+  colorAnimationSpeed: 1
+  enablePulsing: 1
+  pulseSpeed: 2
+  pulseIntensity: 0.3
+  pulseCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  enableGlow: 1
+  glowIntensity: 1.5
+  enableWave: 1
+  waveSpeed: 3
+  waveAmplitude: 0.2
+  waveFrequency: 2
 --- !u!114 &4925485859807021258
 MonoBehaviour:
   m_ObjectHideFlags: 0
