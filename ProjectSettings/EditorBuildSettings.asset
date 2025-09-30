@@ -11,4 +11,16 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/OrbitGame/Scenes/Level 1.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/OrbitGame/Scenes/Level 2.unity
+    guid: eb80466341499ea4394961c6b54ef25c
+  - enabled: 1
+    path: Assets/OrbitGame/Scenes/Level 3.unity
+    guid: 98d53a66802e5cf419a425f78686e05a
+  - enabled: 1
+    path: Assets/OrbitGame/Scenes/Level 4.unity
+    guid: a3c5561054191994a8625b661c993e0f
+  - enabled: 1
+    path: Assets/OrbitGame/Scenes/Level 5.unity
+    guid: f11eda38f06b9ec439ae1fc5e3490593
   m_configObjects: {}

@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class RocketLaunchSystem : MonoBehaviour
 {
+    public float speed;
+    
     [Header("Rocket Settings")]
     public GameObject rocketPrefab;
     public Transform spawnPoint;
@@ -106,6 +108,8 @@ public class RocketLaunchSystem : MonoBehaviour
         {
             spaceObj.enabled = true;
         }
+
+        spaceObj.orbitSpeedMultiplier = speed;
         
         RocketLauncher launcher = newRocket.GetComponent<RocketLauncher>();
         if (launcher != null)

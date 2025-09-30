@@ -5649,6 +5649,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d782f5c81651c74d8e19ace9ca4e416, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 2
   rocketPrefab: {fileID: 21210532631940165, guid: 8ff1270406402ef45a708af6f4aee7a4, type: 3}
   spawnPoint: {fileID: 1097238489}
   launchSpeed: 10
