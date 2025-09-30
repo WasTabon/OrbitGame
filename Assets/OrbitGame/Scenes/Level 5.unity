@@ -453,7 +453,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2726948053355330737, guid: 60cb5e8621115dd46bf6e4fae23eac6e, type: 3}
       propertyPath: orbitSpeedMultiplier
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5467717416094401667, guid: 60cb5e8621115dd46bf6e4fae23eac6e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -500,6 +500,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 60cb5e8621115dd46bf6e4fae23eac6e, type: 3}
+--- !u!1 &206570382 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2527770844246449040, guid: 60cb5e8621115dd46bf6e4fae23eac6e, type: 3}
+  m_PrefabInstance: {fileID: 206570381}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &222286981
 GameObject:
   m_ObjectHideFlags: 0
@@ -2485,7 +2490,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2726948053355330737, guid: 60cb5e8621115dd46bf6e4fae23eac6e, type: 3}
       propertyPath: orbitSpeedMultiplier
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5467717416094401667, guid: 60cb5e8621115dd46bf6e4fae23eac6e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2532,6 +2537,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 60cb5e8621115dd46bf6e4fae23eac6e, type: 3}
+--- !u!1 &1021832074 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2527770844246449040, guid: 60cb5e8621115dd46bf6e4fae23eac6e, type: 3}
+  m_PrefabInstance: {fileID: 1021832073}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1026556719
 GameObject:
   m_ObjectHideFlags: 0
@@ -3536,12 +3546,12 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 55698881}
+  - {fileID: 222286982}
+  - {fileID: 1570281896}
   - {fileID: 1065116229}
   - {fileID: 1249797524}
   - {fileID: 1560951686}
   - {fileID: 1104251227}
-  - {fileID: 222286982}
-  - {fileID: 1570281896}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -5040,7 +5050,7 @@ MonoBehaviour:
   angularDrag: 0.05
   bounciness: 0.8
   minCollisionForce: 0.1
-  orbitSpeedMultiplier: 0.5
+  orbitSpeedMultiplier: 1
   showVelocity: 1
   velocityColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   enableTrail: 1
@@ -5959,6 +5969,8 @@ MonoBehaviour:
   - {fileID: 5064959288084643238}
   - {fileID: 6320251067032345514}
   - {fileID: 1646591960}
+  - {fileID: 1021832074}
+  - {fileID: 206570382}
   visibleDuration: 3
   invisibleDuration: 1.5
   startVisible: 1
