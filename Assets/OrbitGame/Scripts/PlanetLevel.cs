@@ -24,7 +24,20 @@ public class PlanetLevel : MonoBehaviour
     public void LoadLevel()
     {
         if (_isCompleted) return;
-        
+
+        CameraUIManager uiManager = FindObjectOfType<CameraUIManager>();
+        if (uiManager != null)
+        {
+            uiManager.ShowLevelInfoPanel(levelIndex, StartLevel);
+        }
+        else
+        {
+            StartLevel();
+        }
+    }
+
+    private void StartLevel()
+    {
         string levelName = GetLevelNameToLoad();
         if (LevelManager.Instance != null)
         {
