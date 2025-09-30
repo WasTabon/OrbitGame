@@ -4884,6 +4884,7 @@ GameObject:
   - component: {fileID: 1646591963}
   - component: {fileID: 1646591962}
   - component: {fileID: 1646591961}
+  - component: {fileID: 1646591967}
   m_Layer: 0
   m_Name: SM_Env_Asteroid_Rock_05 (1)
   m_TagString: Untagged
@@ -4912,6 +4913,7 @@ MonoBehaviour:
   showVelocity: 1
   velocityColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   enableTrail: 1
+  useAlternativeTrailColor: 1
 --- !u!54 &1646591962
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5026,6 +5028,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1646591967
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1646591960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6aef5d6c74b7a964eb6a865eb6dd3fb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationAxis: {x: 0, y: 1, z: 1}
+  rotationSpeed: 75
 --- !u!1 &1677347960
 GameObject:
   m_ObjectHideFlags: 0
@@ -6113,6 +6129,7 @@ GameObject:
   - component: {fileID: 5060726098214517606}
   - component: {fileID: 5052749444575023346}
   - component: {fileID: 5070280058403964151}
+  - component: {fileID: 5070280058403964152}
   m_Layer: 0
   m_Name: SM_Env_Planet_04
   m_TagString: Untagged
@@ -6155,6 +6172,20 @@ MonoBehaviour:
   captureForce: 5
   orbitSmoothness: 2
   speedMatchThreshold: 0.3
+--- !u!114 &5070280058403964152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5064959288084643238}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6aef5d6c74b7a964eb6a865eb6dd3fb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationAxis: {x: 0, y: 1, z: 0}
+  rotationSpeed: 25
 --- !u!114 &6097439413096564051 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2726948053355330737, guid: 60cb5e8621115dd46bf6e4fae23eac6e, type: 3}

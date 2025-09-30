@@ -19,6 +19,7 @@ public class SpaceObject : MonoBehaviour
     public bool showVelocity = true;
     public Color velocityColor = Color.yellow;
     public bool enableTrail = true;
+    public bool useAlternativeTrailColor = false;
     
     private Rigidbody rb;
     private TrailRenderer trail;
@@ -31,7 +32,6 @@ public class SpaceObject : MonoBehaviour
             SetupTrail();
         }
         
-        // Если есть RocketLauncher, то этот объект начинает неактивным
         RocketLauncher launcher = GetComponent<RocketLauncher>();
         if (launcher != null)
         {
@@ -64,16 +64,34 @@ public class SpaceObject : MonoBehaviour
         trail.material = new Material(Shader.Find("Sprites/Default"));
         
         Gradient gradient = new Gradient();
-        gradient.SetKeys(
-            new GradientColorKey[] { 
-                new GradientColorKey(Color.white, 0.0f), 
-                new GradientColorKey(Color.cyan, 1.0f) 
-            },
-            new GradientAlphaKey[] { 
-                new GradientAlphaKey(1.0f, 0.0f), 
-                new GradientAlphaKey(0.0f, 1.0f) 
-            }
-        );
+        
+        if (useAlternativeTrailColor)
+        {
+            gradient.SetKeys(
+                new GradientColorKey[] { 
+                    new GradientColorKey(new Color(1f, 0.4f, 0.2f), 0.0f),
+                    new GradientColorKey(new Color(0.8f, 0.1f, 0.15f), 1.0f) 
+                },
+                new GradientAlphaKey[] { 
+                    new GradientAlphaKey(1.0f, 0.0f), 
+                    new GradientAlphaKey(0.0f, 1.0f) 
+                }
+            );
+        }
+        else
+        {
+            gradient.SetKeys(
+                new GradientColorKey[] { 
+                    new GradientColorKey(Color.white, 0.0f), 
+                    new GradientColorKey(Color.cyan, 1.0f) 
+                },
+                new GradientAlphaKey[] { 
+                    new GradientAlphaKey(1.0f, 0.0f), 
+                    new GradientAlphaKey(0.0f, 1.0f) 
+                }
+            );
+        }
+        
         trail.colorGradient = gradient;
     }
     
@@ -83,19 +101,16 @@ public class SpaceObject : MonoBehaviour
         
         if (otherSpace != null)
         {
-            // Проверяем есть ли RocketLauncher на одном из объектов
             bool thisIsRocket = GetComponent<RocketLauncher>() != null;
             bool otherIsRocket = otherSpace.GetComponent<RocketLauncher>() != null;
             
             if (thisIsRocket || otherIsRocket)
             {
-                // Выбрасываем из орбиты
                 EjectFromOrbit(collision);
                 otherSpace.EjectFromOrbit(collision);
                 return;
             }
             
-            // Обычное столкновение
             Vector3 relativeVelocity = rb.velocity - otherSpace.rb.velocity;
             Vector3 collisionNormal = collision.contacts[0].normal;
             
@@ -125,22 +140,20 @@ public class SpaceObject : MonoBehaviour
     
     void EjectFromOrbit(Collision collision)
     {
-        // Найти орбит контроллер и освободить объект
         OrbitController[] orbitControllers = FindObjectsOfType<OrbitController>();
         foreach (var controller in orbitControllers)
         {
             controller.ReleaseObject(rb);
         }
         
-        // Добавить силу выброса
         Vector3 ejectDirection = collision.contacts[0].normal;
         if (GetComponent<RocketLauncher>() != null)
         {
-            ejectDirection = -ejectDirection; // ракета отлетает в обратную сторону
+            ejectDirection = -ejectDirection;
         }
         
-        rb.useGravity = false; // на всякий случай
-        rb.velocity = ejectDirection * 25f + Random.insideUnitSphere * 8f; // Увеличил силу выброса
+        rb.useGravity = false;
+        rb.velocity = ejectDirection * 25f + Random.insideUnitSphere * 8f;
         rb.angularVelocity = Random.insideUnitSphere * 15f;
     }
     
