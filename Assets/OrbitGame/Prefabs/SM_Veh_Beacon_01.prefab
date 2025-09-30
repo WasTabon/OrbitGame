@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 2375150683163176480}
   - component: {fileID: 741897622051837854}
   - component: {fileID: 5704907482573690442}
+  - component: {fileID: 2856993717606413912}
   m_Layer: 0
   m_Name: SM_Veh_Beacon_01
   m_TagString: Untagged
@@ -171,3 +172,18 @@ MonoBehaviour:
   showVelocity: 1
   velocityColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   enableTrail: 1
+  useAlternativeTrailColor: 0
+--- !u!114 &2856993717606413912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 21210532631940165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6aef5d6c74b7a964eb6a865eb6dd3fb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationAxis: {x: 0, y: 1, z: 0}
+  rotationSpeed: 50
