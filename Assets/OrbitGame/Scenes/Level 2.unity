@@ -6087,7 +6087,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: dc057b31df0f97245ba2e522a1898bed, type: 2}
+  - {fileID: 2100000, guid: c297a32c3099e07479cfabab9f30732a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6165,7 +6165,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   orbits:
-  - radius: 10
+  - radius: 11
     orbitSpeed: 50
     gizmoColor: {r: 1, g: 0, b: 0, a: 0}
     captureThreshold: 43.8
