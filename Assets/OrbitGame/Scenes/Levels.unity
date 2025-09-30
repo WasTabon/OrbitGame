@@ -600,6 +600,10 @@ MonoBehaviour:
   modifierNameText: {fileID: 1645982087}
   modifierDescriptionText: {fileID: 457543408}
   startLevelButton: {fileID: 137813354}
+  closePanelButton: {fileID: 1190400939}
+  panelAnimationDuration: 0.6
+  iconRotationAmount: 360
+  iconBounceDuration: 0.4
   modifiersDatabase: {fileID: 11400000, guid: a68fe4bbd58ce414d868b9cea8380ff4, type: 2}
 --- !u!1 &368772975
 GameObject:
@@ -1485,19 +1489,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1190400940}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 199486300}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1190400940
 MonoBehaviour:
   m_ObjectHideFlags: 0
