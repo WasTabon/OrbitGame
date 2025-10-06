@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Level4
   m_EditorClassIdentifier: 
   modifierName: Slow Spin
-  modifierIcon: {fileID: 0}
+  modifierIcon: {fileID: 21300000, guid: aeaba948ef9900e428579548158b2664, type: 3}
   description: Map asteroid trajectories

@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Level5
   m_EditorClassIdentifier: 
   modifierName: Blinking Planet
-  modifierIcon: {fileID: 0}
+  modifierIcon: {fileID: 21300000, guid: 5cb96f639809ba6498cdda11ad1681a1, type: 3}
   description: Scan energy crystals

@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Level3
   m_EditorClassIdentifier: 
   modifierName: Fast Spin
-  modifierIcon: {fileID: 0}
+  modifierIcon: {fileID: 21300000, guid: 686eb328136cfb84e96f9022184cdc9a, type: 3}
   description: Capture ice core samples

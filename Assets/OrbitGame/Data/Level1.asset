@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Level1
   m_EditorClassIdentifier: 
   modifierName: Flying Meteors
-  modifierIcon: {fileID: 0}
+  modifierIcon: {fileID: 21300000, guid: e59aa41c74b66154a910497d829879d5, type: 3}
   description: Collect planetary data samples

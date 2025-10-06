@@ -98,7 +98,7 @@ public class GameResultUI : MonoBehaviour
         Transform contentPanel = victoryPanel.transform.Find("ContentPanel");
         
         // Начальное состояние
-        panelRect.GetComponent<Image>().color = new Color(0.1f, 0.8f, 0.1f, 0f);
+        //panelRect.GetComponent<Image>().color = new Color(0.1f, 0.8f, 0.1f, 0f);
         if (contentPanel != null)
         {
             contentPanel.localScale = Vector3.zero;
@@ -131,7 +131,7 @@ public class GameResultUI : MonoBehaviour
         Transform contentPanel = defeatPanel.transform.Find("ContentPanel");
         
         // Начальное состояние
-        panelRect.GetComponent<Image>().color = new Color(0.8f, 0.1f, 0.1f, 0f);
+        //panelRect.GetComponent<Image>().color = new Color(0.8f, 0.1f, 0.1f, 0f);
         if (contentPanel != null)
         {
             contentPanel.localScale = Vector3.zero;
