@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
@@ -5,6 +6,8 @@ using TMPro;
 
 public class BoostController : MonoBehaviour
 {
+    public static BoostController Instance;
+    
     [SerializeField] private GameObject _boostPanel;
     
     [Header("Boost Settings")]
@@ -17,6 +20,7 @@ public class BoostController : MonoBehaviour
 
     [Header("Boost Texts")] 
     [SerializeField] private TextMeshProUGUI coinsText;
+    [SerializeField] private TextMeshProUGUI coinsText2;
     
     [SerializeField] private TextMeshProUGUI boost1Text;
     [SerializeField] private TextMeshProUGUI boost2Text;
@@ -35,7 +39,12 @@ public class BoostController : MonoBehaviour
     private const string BOOST2_KEY = "boost2_count";
     private const string BOOST3_KEY = "boost3_count";
     private const string COINS_KEY = "boost_coins";
-    
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     void Start()
     {
         rocketSystem = FindObjectOfType<RocketLaunchSystem>();
@@ -86,6 +95,10 @@ public class BoostController : MonoBehaviour
         if (coinsText != null)
         {
             coinsText.text = coins.ToString();
+        }
+        if (coinsText2 != null)
+        {
+            coinsText2.text = coins.ToString();
         }
         
         if (boost2Text != null)

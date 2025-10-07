@@ -4,7 +4,7 @@ using UnityEngine.Purchasing;
 
 public class BuyController : MonoBehaviour
 {
-    public string _donateId = "com.concretebuilder.removepurchase";
+    public string _donateId = "com.spinplanet.inappcoins1";
     
     public GameObject loadingButton;
     public AudioClip buySound;
@@ -17,8 +17,7 @@ public class BuyController : MonoBehaviour
         {
             Debug.Log("Complete");
 
-            PlayerPrefs.SetInt("isRemove", 1);
-            PlayerPrefs.Save();
+            BoostController.Instance.AddCoins(50);
             
             MusicController.Instance.PlaySpecificSound(buySound);
             loadingButton.SetActive(false);
