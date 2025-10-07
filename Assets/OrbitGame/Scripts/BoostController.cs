@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using TMPro;
 
 public class BoostController : MonoBehaviour
 {
@@ -9,22 +10,38 @@ public class BoostController : MonoBehaviour
     [Header("Boost Settings")]
     public float timeSlowDuration = 5f;
     public float timeSlowScale = 0.3f;
+    public int boostPrice = 5;
     
     [Header("Target Objects")]
     public SpaceObject[] obstacleObjects;
+
+    [Header("Boost Texts")] 
+    [SerializeField] private TextMeshProUGUI coinsText;
     
-    private bool boost1Used = false;
-    private bool boost2Used = false;
-    private bool boost3Used = false;
+    [SerializeField] private TextMeshProUGUI boost1Text;
+    [SerializeField] private TextMeshProUGUI boost2Text;
+    [SerializeField] private TextMeshProUGUI boost3Text;
+    
+    private int boost1Count = 0;
+    private int boost2Count = 0;
+    private int boost3Count = 0;
+    
+    private int coins = 0;
     
     private Dictionary<SpaceObject, float> originalSpeeds = new Dictionary<SpaceObject, float>();
     private RocketLaunchSystem rocketSystem;
+    
+    private const string BOOST1_KEY = "boost1_count";
+    private const string BOOST2_KEY = "boost2_count";
+    private const string BOOST3_KEY = "boost3_count";
+    private const string COINS_KEY = "boost_coins";
     
     void Start()
     {
         rocketSystem = FindObjectOfType<RocketLaunchSystem>();
         
-        // Сохраняем оригинальные скорости препятствий
+        LoadData();
+        
         foreach (var obstacle in obstacleObjects)
         {
             if (obstacle != null)
@@ -32,20 +49,123 @@ public class BoostController : MonoBehaviour
                 originalSpeeds[obstacle] = obstacle.orbitSpeedMultiplier;
             }
         }
+        
+        UpdateAllTexts();
     }
     
-    // Буст 1: Обратить скорость препятствий
+    void Update()
+    {
+        UpdateAllTexts();
+    }
+    
+    void LoadData()
+    {
+        boost1Count = PlayerPrefs.GetInt(BOOST1_KEY, 50);
+        boost2Count = PlayerPrefs.GetInt(BOOST2_KEY, 50);
+        boost3Count = PlayerPrefs.GetInt(BOOST3_KEY, 50);
+        coins = PlayerPrefs.GetInt(COINS_KEY, 50);
+        
+        Debug.Log($"Loaded: Boost1={boost1Count}, Boost2={boost2Count}, Boost3={boost3Count}, Coins={coins}");
+    }
+    
+    void SaveData()
+    {
+        PlayerPrefs.SetInt(BOOST1_KEY, boost1Count);
+        PlayerPrefs.SetInt(BOOST2_KEY, boost2Count);
+        PlayerPrefs.SetInt(BOOST3_KEY, boost3Count);
+        PlayerPrefs.SetInt(COINS_KEY, coins);
+        PlayerPrefs.Save();
+    }
+    
+    void UpdateAllTexts()
+    {
+        if (boost1Text != null)
+        {
+            boost1Text.text = $"REVERSE OBSTACLES SPEED ({boost1Count})";
+        }
+        if (coinsText != null)
+        {
+            coinsText.text = coins.ToString();
+        }
+        
+        if (boost2Text != null)
+        {
+            boost2Text.text = $"SLOW TIME FOR 5 SECONDS ({boost2Count})";
+        }
+        
+        if (boost3Text != null)
+        {
+            boost3Text.text = $"DECREASE NUMBER OF ROCKETS ({boost3Count})";
+        }
+    }
+    
+    public void BuyBoost1()
+    {
+        if (coins >= boostPrice)
+        {
+            coins -= boostPrice;
+            boost1Count++;
+            SaveData();
+            Debug.Log($"Bought Boost 1! Count: {boost1Count}, Coins left: {coins}");
+        }
+        else
+        {
+            Debug.Log("Not enough coins to buy Boost 1!");
+        }
+    }
+    
+    public void BuyBoost2()
+    {
+        if (coins >= boostPrice)
+        {
+            coins -= boostPrice;
+            boost2Count++;
+            SaveData();
+            Debug.Log($"Bought Boost 2! Count: {boost2Count}, Coins left: {coins}");
+        }
+        else
+        {
+            Debug.Log("Not enough coins to buy Boost 2!");
+        }
+    }
+    
+    public void BuyBoost3()
+    {
+        if (coins >= boostPrice)
+        {
+            coins -= boostPrice;
+            boost3Count++;
+            SaveData();
+            Debug.Log($"Bought Boost 3! Count: {boost3Count}, Coins left: {coins}");
+        }
+        else
+        {
+            Debug.Log("Not enough coins to buy Boost 3!");
+        }
+    }
+    
+    public void AddCoins(int amount)
+    {
+        coins += amount;
+        SaveData();
+        Debug.Log($"Added {amount} coins. Total: {coins}");
+    }
+    
     public void UseBoost1()
     {
-        if (boost1Used)
+        if (boost1Count <= 0)
         {
-            Debug.Log("BoostController: Буст 1 уже использован!");
+            Debug.Log("No Boost 1 available!");
             return;
         }
         
-        boost1Used = true;
+        boost1Count--;
+        SaveData();
 
-        _boostPanel.SetActive(false);
+        if (_boostPanel != null)
+        {
+            _boostPanel.SetActive(false);
+        }
         
         foreach (var obstacle in obstacleObjects)
         {
@@ -55,55 +175,61 @@ public class BoostController : MonoBehaviour
             }
         }
         
-        Debug.Log("BoostController: Буст 1 активирован - препятствия движутся в обратную сторону!");
+        Debug.Log($"Boost 1 used! Remaining: {boost1Count}");
     }
     
-    // Буст 2: Замедление времени
     public void UseBoost2()
     {
-        if (boost2Used)
+        if (boost2Count <= 0)
         {
-            Debug.Log("BoostController: Буст 2 уже использован!");
+            Debug.Log("No Boost 2 available!");
             return;
         }
         
-        boost2Used = true;
+        boost2Count--;
+        SaveData();
         
-        _boostPanel.SetActive(false);
+        if (_boostPanel != null)
+        {
+            _boostPanel.SetActive(false);
+        }
         
         StartCoroutine(SlowTimeCoroutine());
         
-        Debug.Log("BoostController: Буст 2 активирован - замедление времени!");
+        Debug.Log($"Boost 2 used! Remaining: {boost2Count}");
     }
     
-    // Буст 3: Уменьшить количество ракет
     public void UseBoost3()
     {
-        if (boost3Used)
+        if (boost3Count <= 0)
         {
-            Debug.Log("BoostController: Буст 3 уже использован!");
+            Debug.Log("No Boost 3 available!");
             return;
         }
         
         if (rocketSystem == null)
         {
-            Debug.LogError("BoostController: RocketLaunchSystem не найден!");
+            Debug.LogError("RocketLaunchSystem not found!");
             return;
         }
         
         if (rocketSystem.requiredRocketsCount <= 1)
         {
-            Debug.Log("BoostController: Нельзя уменьшить количество ракет ниже 1!");
+            Debug.Log("Cannot decrease rockets below 1!");
             return;
         }
         
-        boost3Used = true;
+        boost3Count--;
+        SaveData();
         
-        _boostPanel.SetActive(false);
+        if (_boostPanel != null)
+        {
+            _boostPanel.SetActive(false);
+        }
         
         rocketSystem.requiredRocketsCount -= 1;
         
-        Debug.Log($"BoostController: Буст 3 активирован - требуется ракет: {rocketSystem.requiredRocketsCount}!");
+        Debug.Log($"Boost 3 used! Remaining: {boost3Count}, Rockets required: {rocketSystem.requiredRocketsCount}");
     }
     
     private IEnumerator SlowTimeCoroutine()
@@ -114,22 +240,16 @@ public class BoostController : MonoBehaviour
         yield return new WaitForSecondsRealtime(timeSlowDuration);
         
         Time.timeScale = originalTimeScale;
-        Debug.Log("BoostController: Замедление времени закончилось!");
+        Debug.Log("Time slow ended!");
     }
     
-    // Методы для проверки статуса бустов (для UI)
-    public bool IsBoost1Used() { return boost1Used; }
-    public bool IsBoost2Used() { return boost2Used; }
-    public bool IsBoost3Used() { return boost3Used; }
+    public int GetBoost1Count() { return boost1Count; }
+    public int GetBoost2Count() { return boost2Count; }
+    public int GetBoost3Count() { return boost3Count; }
+    public int GetCoins() { return coins; }
     
-    // Сброс всех бустов (для перезапуска игры)
     public void ResetAllBoosts()
     {
-        boost1Used = false;
-        boost2Used = false;
-        boost3Used = false;
-        
-        // Восстанавливаем оригинальные скорости препятствий
         foreach (var obstacle in obstacleObjects)
         {
             if (obstacle != null && originalSpeeds.ContainsKey(obstacle))
@@ -138,9 +258,8 @@ public class BoostController : MonoBehaviour
             }
         }
         
-        // Восстанавливаем время
         Time.timeScale = 1f;
         
-        Debug.Log("BoostController: Все бусты сброшены!");
+        Debug.Log("All boosts reset!");
     }
 }
